@@ -1,39 +1,78 @@
 const ROCK = 'rock'
 const PAPER = 'paper'
 const SCISSORS = 'scissors'
+const EMOJIS = ['✊', '✋', '✌️']
 
 let userChoice
 let computerChoice
 
 let userScore = 0
 let computerScore = 0
-let gameComplete = false;
+let roundWinner = null;
+let roundComplete = false;
 
-const getUserInput = () => {
-    userChoice = null;
-    userChoice = Number(prompt('Please input a number between 1-3 to select your play this round. (1)Rock, (2)Paper, (3)Scissors'))
-    validateUserInput()
-}
+const computerChoiceIcon = document.querySelector('.computerChoiceIcon')
+const rockButton = document.querySelector('#rock')
+const paperButton = document.querySelector('#paper')
+const scissorsButton = document.querySelector('#scissors')
+const replayButton = document.querySelector('#replayButton')
 
-const validateUserInput = () => {
-    switch (userChoice) {
-        case 1:
-            userChoice = ROCK
-            console.log(`You selected ${userChoice}!`)
-            break
-        case 2:
-            userChoice = PAPER
-            console.log(`You selected ${userChoice}!`)
-            break
-        case 3:
-            userChoice = SCISSORS
-            console.log(`You selected ${userChoice}!`)
-            break
-        default:
-        alert('Improper input, please try again')
-        getUserInput()
+let currentEmojiSelectionIndex = 0
+
+setInterval(() => {
+    if(roundComplete !== true) {
+        computerChoiceIcon.textContent = EMOJIS[currentEmojiSelectionIndex]
+        currentEmojiSelectionIndex++
     }
+    if(currentEmojiSelectionIndex > EMOJIS.length - 1) {
+        currentEmojiSelectionIndex = 0;
+    }
+}, 300)
+
+const disableAllButtons = () => {
+    rockButton.disabled = true
+    paperButton.disabled = true
+    scissorsButton.disabled = true
 }
+
+const enableAllButtons = () => {
+    rockButton.disabled = false
+    paperButton.disabled = false
+    scissorsButton.disabled = false
+
+    rockButton.style.background = '#202426'
+    paperButton.style.background = '#202426'
+    scissorsButton.style.background = '#202426'
+}
+
+
+const userButtonContainer = document.querySelector('.buttonContainer');
+
+userButtonContainer.addEventListener('click', (event) => {
+    const target = event.target;
+
+    switch(target.id) {
+        case 'rock':
+            console.log('Rock was selected by user');
+            userChoice = ROCK
+            target.style.background = '#5f686c'
+            break;
+        case 'paper':
+            console.log('Paper was selected by user');
+            userChoice = PAPER
+            target.style.background = '#5f686c'
+            break;
+        case 'scissors':
+            console.log('Scissors was selected by user');
+            userChoice = SCISSORS
+            target.style.background = '#5f686c'
+            break;
+        default:
+            return;
+    }
+    disableAllButtons()
+    getComputerSelection();
+});
 
 const getComputerSelection = () => {
 const computerRoll = Math.floor(Math.random() * (3 - 1 + 1) + 1);
@@ -54,27 +93,46 @@ const computerRoll = Math.floor(Math.random() * (3 - 1 + 1) + 1);
             console.log(`Computer Selection Invalid! Computer selection was: ${computerChoice}`)
             break
     }
+    displayComputerSelection(computerRoll)
+    determineRoundWinner()
+}
+
+const displayComputerSelection = (computerRoll) => {
+    setTimeout(() => {
+        roundComplete = true
+        computerChoiceIcon.textContent = EMOJIS[computerRoll - 1]
+        displayWinner()
+        updateScores()
+    }, 2000) 
+
+    setTimeout(() => {
+        replayButton.style.display = 'block'
+    }, 2500)
 }
 
 const determineRoundWinner = () => {
     switch (userChoice) {
         case ROCK: 
-        if(computerChoice === SCISSORS) {
+            if(computerChoice === SCISSORS) {
                 console.log('YOU WON!')
+                roundWinner = 'player'
                 userScore++
             } else if (computerChoice === ROCK) {
                 console.log('YOU TIED!')
             } else {
                 console.log('YOU LOST!')
+                roundWinner = 'computer'
                 computerScore++
             }
         break
         case PAPER:
             if(computerChoice === SCISSORS) {
                 console.log('YOU LOST!')
+                roundWinner = 'computer'
                 computerScore++
             } else if (computerChoice === ROCK) {
                 console.log('YOU WON!')
+                roundWinner = 'player'
                 userScore++
             } else {
                 console.log('YOU TIED!')
@@ -85,39 +143,46 @@ const determineRoundWinner = () => {
                 console.log('YOU TIED!')
             } else if (computerChoice === ROCK) {
                 console.log('YOU LOST!')
+                roundWinner = 'computer'
                 computerScore++
             } else {
                 console.log('YOU WON!')
+                roundWinner = 'player'
                 userScore++
             }   
         break
     }
 }
 
-const determineCurrentScore = () => {
-    if (userScore === 3) {
-        alert('You won best out of 5! Game Over!')
-        console.log('You won best out of 5! Game Over!')
-        gameComplete = true
-    } else if (computerScore === 3) {
-        alert("You lost best out of 5!!! Better luck next time!")
-        console.log("You lost best out of 5!!! Better luck next time!")
-        gameComplete = true
-    } else {
-        gameComplete = false
-        console.log(`Your score: ${userScore}/5. Computer score: ${computerScore}/5`)
+const computerScoreUI = document.querySelector('.computerScore')
+const userScoreUI = document.querySelector('.userScore')
+const updateScores = () => {
+    computerScoreUI.textContent = computerScore.toString()
+    userScoreUI.textContent = userScore.toString()
+}
+
+const roundWinnerText = document.querySelector('.roundWinnerText')
+const displayWinner = () => {
+    switch (roundWinner) {
+        case 'computer': 
+            roundWinnerText.textContent = 'YOU LOST!!!'
+            break
+        case 'player': 
+            roundWinnerText.textContent = 'YOU WON!!!'
+            break
+        default:
+            roundWinnerText.textContent = 'YOU TIED!!!'
+            break
     }
+    roundWinnerText.style.display = 'block'
+    roundWinner = null
 }
 
-const playRound = () => {
-    console.log("Rock Paper Scissors best out of 5!")
-    do {
-        getUserInput()
-        getComputerSelection()
-        determineRoundWinner()
-        determineCurrentScore()
-    } while (gameComplete == false)
-}
-
-playRound()
-
+replayButton.addEventListener('click', () => {
+    roundComplete = false
+    replayButton.style.display = 'none'
+    roundWinnerText.style.display = 'none'
+    roundWinner = null;
+    enableAllButtons()
+})
+// remove you won/tied/lost text
