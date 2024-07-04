@@ -1,0 +1,99 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #202426;
+}
+
+.headerContainer{
+    display: flex;
+    background-color: #202426;
+    color: rgb(255, 213, 77);
+    padding: 20px 150px;
+    gap: 15px;
+    align-items: center;
+    justify-content: center;
+}
+
+.headerContainer p{
+    font-size: 40px;
+}
+
+.gameStatusContainer {
+    display: flex;
+    justify-content: center;
+    min-height: 100px;
+}
+
+.roundWinnerText {
+    color: rgb(255, 255, 255);
+    font-size: 75px;
+    font-weight: bolder;
+    display: none;
+}
+
+.computerContainer {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    margin: 0px 400px;
+    align-items: center;
+    border: rgb(255, 213, 77), 5px, solid;
+    border-radius: 15px;
+}
+
+.scoreContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    padding: 20px;
+}
+
+.computerChoiceIcon{
+    font-size: 300px;
+}
+
+.scoreContainer p{
+ color: white;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: space-around;
+    padding: 50px 350px;
+}
+
+.buttonContainer button{
+    background-color: #202426;
+    height: 100px;
+    width: 100px;
+    font-size: 75px;
+    border-radius: 15px;
+}
+
+.buttonContainer button:hover{
+    background-color: #5f686c;
+}
+
+.replayContainer {
+    display: flex;
+    justify-content: space-around;
+    padding: 0px 350px;
+}
+
+.replayContainer button{
+    background-color: #343434;
+    color: rgb(255, 213, 77);
+    font-size: 75px;
+    width: 500px;
+    border-radius: 15px;
+    padding: 10px;
+    display: none;
+}
+
+.replayContainer button:hover{
+    background-color: #979b9c;
+}
