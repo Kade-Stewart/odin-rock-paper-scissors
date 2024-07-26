@@ -5,7 +5,6 @@ const EMOJIS = ['✊', '✋', '✌️']
 
 let userChoice
 let computerChoice
-
 let userScore = 0
 let computerScore = 0
 let roundWinner = null;
@@ -185,4 +184,3 @@ replayButton.addEventListener('click', () => {
     roundWinner = null;
     enableAllButtons()
 })
-// remove you won/tied/lost text
